@@ -1,5 +1,5 @@
 CXX			= g++
-CXXFLAGS	= --std=c++14
+CXXFLAGS	= --std=c++14# -fsanitize=address -g
 SOURCES		= $(wildcard *.cpp)
 ifeq ($(OS),Windows_NT)
 EXE			= $(SOURCES:%.cpp=%.exe)

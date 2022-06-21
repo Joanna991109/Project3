@@ -1,33 +1,33 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
 #include <array>
-#include <vector>
 #include <cassert>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #define TIMEOUT 10
 
 struct Point {
     int x, y;
-	Point() : Point(0, 0) {}
-	Point(float x, float y) : x(x), y(y) {}
-	bool operator==(const Point& rhs) const {
-		return x == rhs.x && y == rhs.y;
-	}
-	bool operator!=(const Point& rhs) const {
-		return !operator==(rhs);
-	}
-	Point operator+(const Point& rhs) const {
-		return Point(x + rhs.x, y + rhs.y);
-	}
-	Point operator-(const Point& rhs) const {
-		return Point(x - rhs.x, y - rhs.y);
-	}
+    Point() : Point(0, 0) {}
+    Point(float x, float y) : x(x), y(y) {}
+    bool operator==(const Point& rhs) const {
+        return x == rhs.x && y == rhs.y;
+    }
+    bool operator!=(const Point& rhs) const {
+        return !operator==(rhs);
+    }
+    Point operator+(const Point& rhs) const {
+        return Point(x + rhs.x, y + rhs.y);
+    }
+    Point operator-(const Point& rhs) const {
+        return Point(x - rhs.x, y - rhs.y);
+    }
 };
 
 class GomokuBoard {
-public:
+   public:
     enum SPOT_STATE {
         EMPTY = 0,
         BLACK = 1,
@@ -39,7 +39,8 @@ public:
     int cur_player;
     bool done;
     int winner;
-private:
+
+   private:
     int get_next_player(int player) const {
         return 3 - player;
     }
@@ -64,8 +65,8 @@ private:
             return false;
         return true;
     }
-    
-public:
+
+   public:
     GomokuBoard() {
         reset();
     }
@@ -76,12 +77,12 @@ public:
             }
         }
         cur_player = BLACK;
-        empty_count = SIZE*SIZE;
+        empty_count = SIZE * SIZE;
         done = false;
         winner = -1;
     }
     bool put_disc(Point p) {
-        if(!is_spot_valid(p)) {
+        if (!is_spot_valid(p)) {
             winner = get_next_player(cur_player);
             done = true;
             return false;
@@ -102,14 +103,14 @@ public:
         cur_player = get_next_player(cur_player);
         return true;
     }
-    bool checkwin(int disc){
+    bool checkwin(int disc) {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                if (is_disc_at(Point(i, j), disc)){
+                if (is_disc_at(Point(i, j), disc)) {
                     bool iswin = true;
                     if (i + 4 < SIZE) {
-                        for(int k = 0; k < 5; k++)
-                            if (!is_disc_at(Point(i+k, j), disc)) {
+                        for (int k = 0; k < 5; k++)
+                            if (!is_disc_at(Point(i + k, j), disc)) {
                                 iswin = false;
                                 break;
                             }
@@ -117,8 +118,8 @@ public:
                     }
                     iswin = true;
                     if (j + 4 < SIZE) {
-                        for(int k = 0; k < 5; k++)
-                            if (!is_disc_at(Point(i, j+k), disc)) {
+                        for (int k = 0; k < 5; k++)
+                            if (!is_disc_at(Point(i, j + k), disc)) {
                                 iswin = false;
                                 break;
                             }
@@ -126,8 +127,8 @@ public:
                     }
                     iswin = true;
                     if (i + 4 < SIZE && j + 4 < SIZE) {
-                        for(int k = 0; k < 5; k++)
-                            if (!is_disc_at(Point(i+k, j+k), disc)) {
+                        for (int k = 0; k < 5; k++)
+                            if (!is_disc_at(Point(i + k, j + k), disc)) {
                                 iswin = false;
                                 break;
                             }
@@ -135,8 +136,8 @@ public:
                     }
                     iswin = true;
                     if (i - 4 >= 0 && j + 4 < SIZE) {
-                        for(int k = 0; k < 5; k++)
-                            if (!is_disc_at(Point(i-k, j+k), disc)) {
+                        for (int k = 0; k < 5; k++)
+                            if (!is_disc_at(Point(i - k, j + k), disc)) {
                                 iswin = false;
                                 break;
                             }
@@ -158,10 +159,10 @@ public:
         if (board[x][y] == WHITE) return "X";
         return " ";
     }
-    std::string encode_output(bool fail=false) {
+    std::string encode_output(bool fail = false) {
         int i, j;
         std::stringstream ss;
-        ss << "Timestep #" << (SIZE*SIZE-empty_count+1) << "\n";
+        ss << "Timestep #" << (SIZE * SIZE - empty_count + 1) << "\n";
         if (fail) {
             ss << "Winner is " << encode_player(winner) << " (Opponent performed invalid move)\n";
         } else if (done) {
@@ -172,7 +173,7 @@ public:
         ss << "+-----------------------------+\n";
         for (i = 0; i < SIZE; i++) {
             ss << "|";
-            for (j = 0; j < SIZE-1; j++) {
+            for (j = 0; j < SIZE - 1; j++) {
                 ss << encode_spot(i, j) << " ";
             }
             ss << encode_spot(i, j) << "|\n";
@@ -185,7 +186,7 @@ public:
         std::stringstream ss;
         ss << cur_player << "\n";
         for (i = 0; i < SIZE; i++) {
-            for (j = 0; j < SIZE-1; j++) {
+            for (j = 0; j < SIZE - 1; j++) {
                 ss << board[i][j] << " ";
             }
             ss << board[i][j] << "\n";
@@ -203,8 +204,8 @@ void launch_executable(std::string filename) {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
     size_t pos;
     std::string command = "start /min " + filename + " " + file_state + " " + file_action;
-    if((pos = filename.rfind("/"))!=std::string::npos || (pos = filename.rfind("\\"))!=std::string::npos)
-        filename = filename.substr(pos+1, std::string::npos);
+    if ((pos = filename.rfind("/")) != std::string::npos || (pos = filename.rfind("\\")) != std::string::npos)
+        filename = filename.substr(pos + 1, std::string::npos);
     std::string kill = "timeout /t " + std::to_string(timeout) + " > NUL && taskkill /im " + filename + " > NUL 2>&1";
     system(command.c_str());
     system(kill.c_str());
@@ -247,7 +248,8 @@ int main(int argc, char** argv) {
             int x, y;
             if (!(fin >> x)) break;
             if (!(fin >> y)) break;
-            p.x = x; p.y = y;
+            p.x = x;
+            p.y = y;
         }
         fin.close();
         std::cout << "Put: (" << p.x << ',' << p.y << ")\n";

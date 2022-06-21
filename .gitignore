@@ -1,2 +1,7 @@
 documents/
 *.log
+main.exe
+player_random.exe
+main
+player_random
+tmp/

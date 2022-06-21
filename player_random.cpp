@@ -1,8 +1,8 @@
-#include <iostream>
-#include <fstream>
+#include <array>
 #include <cstdlib>
 #include <ctime>
-#include <array>
+#include <fstream>
+#include <iostream>
 
 enum SPOT_STATE {
     EMPTY = 0,
@@ -25,18 +25,16 @@ void read_board(std::ifstream& fin) {
 
 void write_valid_spot(std::ofstream& fout) {
     srand(time(NULL));
-    int x, y;
-    // Keep updating the output until getting killed.
-    while(true) {
-        // Choose a random spot.
-        int x = (rand() % SIZE);
-        int y = (rand() % SIZE);
-        if (board[x][y] == EMPTY) {
-            fout << x << " " << y << std::endl;
-            // Remember to flush the output to ensure the last action is written to file.
-            fout.flush();
-        }
+    // Choose a random spot.
+    int x = (rand() % SIZE);
+    int y = (rand() % SIZE);
+    while (board[x][y] != EMPTY) {
+        x = (rand() % SIZE);
+        y = (rand() % SIZE);
     }
+    fout << x << " " << y << std::endl;
+    // Remember to flush the output to ensure the last action is written to file.
+    fout.flush();
 }
 
 int main(int, char** argv) {
